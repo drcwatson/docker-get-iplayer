@@ -18,7 +18,10 @@ RUN mkdir -p /data
 WORKDIR /app
 
 # Create a new group and user inside the container
-RUN addgroup -S iplayer && adduser -S iplayer -G iplayer
+# GID and UID are to match settings in the NFS host
+ENV UID=1000
+ENV GID=1000
+RUN addgroup -g ${GID} -S iplayer && adduser -S iplayer -G iplayer -u ${UID}
 
 RUN wget -q https://raw.githubusercontent.com/get-iplayer/get_iplayer/master/get_iplayer && \
    chmod 0755 ./get_iplayer
