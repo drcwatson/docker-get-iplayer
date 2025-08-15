@@ -32,5 +32,5 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/${{ github.actor }}/serviio:latest
+          tags: ghcr.io/${{ github.repository }}:latest
           platforms: linux/amd64,linux/arm64
