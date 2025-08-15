@@ -31,3 +31,13 @@ docker run -v $(pwd)/data:/data barwell/get-iplayer --type radio --pid b06z34cd
 # Download programme from iPlayer website URL
 docker run -v $(pwd)/data:/data barwell/get-iplayer --url https://www.bbc.co.uk/iplayer/episode/<id>/<name>
 ```
+
+## Changes from base
+
+1. Changed to use latest alpine not hardcoded value
+2. Changed to get latest get-iplayer at build time
+3. Changed to use an iplayer user
+4. Hardcoded uid/gid of iplayer user to match personal storage
+5. Changed to use data paths from personal storage system
+6. Added github action to build docker image and store to repo container registry
+7. Scheduled rebuild weekly to get latest iplayer (and other fixes)
