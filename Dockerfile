@@ -1,5 +1,7 @@
-FROM alpine:3.21.3
-LABEL maintainer="barwell"
+# Forked from https://github.com/JamesBarwell/docker-get-iplayer
+ARG ALPINE_VERSION=latest
+FROM alpine:${ALPINE_VERSION}
+LABEL maintainer="barwell, cwatson"
 
 RUN apk --update add \
     ffmpeg \
@@ -11,17 +13,19 @@ RUN apk --update add \
 
 RUN apk add atomicparsley --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ --allow-untrusted && ln -s `which atomicparsley` /usr/local/bin/AtomicParsley
 
-RUN mkdir -p /data/output /data/config
+RUN mkdir -p /data
 
 WORKDIR /app
 
-ENV GET_IPLAYER_VERSION=3.36
+# Create a new group and user inside the container
+RUN addgroup -S iplayer && adduser -S iplayer -G iplayer
 
-RUN wget -qO- https://github.com/get-iplayer/get_iplayer/archive/v${GET_IPLAYER_VERSION}.tar.gz | tar -xvz -C /tmp && \
-    mv /tmp/get_iplayer-${GET_IPLAYER_VERSION}/get_iplayer . && \
-    rm -rf /tmp/* && \
-    chmod +x ./get_iplayer
+RUN wget -q https://raw.githubusercontent.com/get-iplayer/get_iplayer/master/get_iplayer && \
+   chmod 0755 ./get_iplayer
 
-ENTRYPOINT ["./get_iplayer", "--ffmpeg", "/usr/bin/ffmpeg", "--profile-dir", "/data/config", "--output", "/data/output"]
+# Set the created user as the default user
+USER iplayer
+
+ENTRYPOINT ["./get_iplayer", "--ffmpeg", "/usr/bin/ffmpeg", "--profile-dir", "/data/iplayer/.get_iplayer", "--output", "/data/iplayer"]
 
 CMD ["-h"]
