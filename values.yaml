@@ -1,0 +1,44 @@
+# Default values for serviio.
+image:
+  repository: ghcr.io/drcwatson/get-iplayer
+  tag: "latest"
+  pullPolicy: Always
+  # Optionally override the GitHub username (default: drcwatson)
+  githubUser: "drcwatson"
+
+# Image pull secret for private registries (e.g., GitHub Container Registry)
+imagePullSecrets:
+  - name: ghcr
+
+# This will set the replicaset count more information can be found here: https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/
+replicaCount: 1
+
+storage:
+  enabled: true
+  size: 8Gi
+  storageClassName: nfs-client
+
+content:
+  iplayer:
+    mount: /data
+    # Set the NFS server and path to the share
+    nfs:
+      server: 192.168.1.106
+      path: /mnt/storage/video
+
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: "kubernetes.io/arch"
+          operator: In
+          values: ["arm64"]
+    preferredDuringSchedulingIgnoredDuringExecution:
+    - weight: 1
+      preference:
+        matchExpressions:
+        - key: model
+          operator: In
+          values:
+          - RPI5

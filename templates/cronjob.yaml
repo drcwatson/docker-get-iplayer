@@ -1,0 +1,45 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "get_iplayer.fullname" . }}
+spec:
+  schedule: "@daily"
+  jobTemplate:
+    metadata:
+      labels:
+        app: {{ template "get_iplayer.name" $ }}
+    spec:
+      template:
+        spec:
+          {{- if .Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml .Values.imagePullSecrets | nindent 12 }}
+          {{- end }}
+          containers:
+          - name: {{ template "get_iplayer.name" $ }}-pvr
+            args: ["--pvr"]
+            image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+            imagePullPolicy: {{ .Values.image.pullPolicy | default "IfNotPresent" }}
+            # Mount the NFS volume in the container
+            volumeMounts:
+{{- range $key, $val := .Values.content }}
+            - name: {{ $key }}
+              mountPath: {{ $val.mount }}
+{{- end }}
+          # Add the NFS volume to the Pod
+          volumes:
+{{- range $key, $val := .Values.content }}
+          - name: {{ $key }}
+          {{- if $val.nfs }}
+            # Set the NFS server and path to the share
+            nfs:
+              server: {{ $val.nfs.server }}
+              path: {{ $val.nfs.path }}
+              readOnly: false
+          {{- end }}
+{{- end }}
+          restartPolicy: OnFailure
+          affinity:
+            {{- if .Values.affinity }}
+{{ toYaml .Values.affinity | trim | indent 12 }}
+        {{- end }}
