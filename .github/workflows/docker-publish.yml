@@ -7,9 +7,9 @@ on:
       - main
   workflow_dispatch:
   schedule:
-    # Runs at 05:30 UTC every day
+    # Runs at 02:12 UTC every day
     # Note: Use UTC time for schedules
-    - cron: '@weekly'
+    - cron: '12 2 * * *'
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
