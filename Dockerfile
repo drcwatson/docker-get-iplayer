@@ -9,7 +9,7 @@ RUN apk --update add \
     perl-mojolicious \
     perl-lwp-protocol-https \
     perl-xml-simple \
-    perl-xml-libxml
+    perl-xml-libxml \
 
 RUN apk add atomicparsley --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ --allow-untrusted && ln -s `which atomicparsley` /usr/local/bin/AtomicParsley
 
