@@ -29,13 +29,14 @@ RUN wget -q https://raw.githubusercontent.com/get-iplayer/get_iplayer/master/get
     chmod 0755 ./get_iplayer ./get_iplayer.cgi
 
     # Create a local script with the right arguments
-RUN echo "/app/get_iplayer --ffmpeg /usr/bin/ffmpeg --profile-dir /data/iplayer/.get_iplayer --output /data/iplayer $*" > /app/get_iplayer.sh && \
+RUN echo "#!/bin/sh" > /app/get_iplayer.sh && \
+    echo '/app/get_iplayer --ffmpeg /usr/bin/ffmpeg --profile-dir /data/iplayer/.get_iplayer --output /data/iplayer $*'' >> /app/get_iplayer.sh && \
     chmod +x /app/get_iplayer.sh
 
 # Set the created user as the default user
 USER iplayer
 
-ENTRYPOINT ["/app/get_iplayer", "--ffmpeg", "/usr/bin/ffmpeg", "--profile-dir", "/data/iplayer/.get_iplayer", "--output", "/data/iplayer"]
+ENTRYPOINT ["/app/get_iplayer.sh"]
 
 CMD ["-h"]
 
