@@ -1,12 +1,14 @@
+{{- if and .Values.service.enabled .Values.webui.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "get_iplayer.fullname" . }}
 spec:
-  type: LoadBalancer
+  type: {{ .Values.service.type }}
   selector:
     app:  {{ include "get_iplayer.name" . }}
   ports:
     - name: {{ include "get_iplayer.name" . }}
       port: 80
       targetPort: {{ include "get_iplayer.name" . }}
+{{- end }}

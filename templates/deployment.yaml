@@ -1,3 +1,4 @@
+{{- if .Values.webui.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -46,3 +47,4 @@ spec:
         {{- if .Values.affinity }}
 {{ toYaml .Values.affinity | trim | indent 8 }}
         {{- end }}
+{{- end }}

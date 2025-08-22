@@ -46,6 +46,37 @@ docker run -v $(pwd)/data:/data barwell/get-iplayer --url https://www.bbc.co.uk/
 
 Creates a CronJob that runs @daily (aka midnight).  The /data mountpoint is mounted from an NFS server (see values.yaml).
 
+If enabled in the values then the PVR management UI is deployed.
+
+## Management UI
+
+The management UI is exposed through a service, by default a LoadBalancer, this should get an IP address exposed by your LoadBalancer system.
+The deployment is enabled if webui.enables is true, and a service is enabled if service.enabled is true.
+
+The service is accesiable on the IP exposed by:
+
+```
+kubectl get svc --namespace iplayer get-iplayer --output jsonpath='{.status.loadBalancer.ingress[0].ip}
+```
+
+>[!TODO]
+> Use the ingress instead.
+
+## Ad-Hoc Recording
+
+Ad-Hoc recording is available via the deployment supporting the PVR Management UI.  Run:
+
+```
+kubectl exec -t -n iplayer services/get-iplayer -- /app/get_iplayer.sh --get <Search>
+```
+
+`--pid` or `--pid-recursive` may also be specified on the command line:
+
+```
+kubectl exec -t -n iplayer services/get-iplayer -- /app/get_iplayer.sh --get --pid-recursive <PID>
+```
+
+
 ## Deploying
 
 ### Pulling Images from GitHub Container Registry (ghcr.io)
