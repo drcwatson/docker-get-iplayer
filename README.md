@@ -51,16 +51,9 @@ If enabled in the values then the PVR management UI is deployed.
 ## Management UI
 
 The management UI is exposed through a service, by default a LoadBalancer, this should get an IP address exposed by your LoadBalancer system.
-The deployment is enabled if webui.enables is true, and a service is enabled if service.enabled is true.
+The deployment is enabled if webui.enabled is true.
 
-The service is accesiable on the IP exposed by:
-
-```
-kubectl get svc --namespace iplayer get-iplayer --output jsonpath='{.status.loadBalancer.ingress[0].ip}
-```
-
->[!TODO]
-> Use the ingress instead.
+The Web Management PVR is available through the default ingress controller on the host and path specified in the values.
 
 ## Ad-Hoc Recording
 

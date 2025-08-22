@@ -21,9 +21,10 @@ storage:
   size: 8Gi
   storageClassName: nfs-client
 
-service:
-  enabled: true
-  type: LoadBalancer
+ingress:
+  host: 192.168.1.153
+  path: iplayer
+  class: nginx
 
 content:
   iplayer:

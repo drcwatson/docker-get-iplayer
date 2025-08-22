@@ -19,7 +19,7 @@ spec:
       {{- end }}
       containers:
       - name: {{ template "get_iplayer.name" $ }}
-        command: ["/app/get_iplayer.cgi", "-g", "/app/get_iplayer.sh", "--listen", "0.0.0.0", "--port", "1935"]
+        command: ["/app/get_iplayer.cgi", "-g", "/app/get_iplayer.sh", "-b", "http://{{ .Values.ingress.host }}/{{ .Values.ingress.path }}/", "--listen", "0.0.0.0", "--port", "1935"]
         image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
         imagePullPolicy: {{ .Values.image.pullPolicy | default "IfNotPresent" }}
         ports:
